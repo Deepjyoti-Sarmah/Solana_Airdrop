@@ -7,6 +7,7 @@ import { Connection, PublicKey } from "@solana/web3.js";
 function App() {
 
   const [solanaPublicKey, setSolanaPublicKey] = useState("");
+  const [solAmount, setSolAmount] = useState(1);
   const [txnHash, setTxnHash] = useState("");
   // const [isAirdropped, setIsAirdropped] = useState(false);
 
@@ -22,11 +23,11 @@ function App() {
       return;
     }
     // 1e9 lamports = 10^9 lamports = 1 SOL
-    const txnhash = await connection.requestAirdrop(publicKeyObject, 1e9);
+    const lamports = Math.min(solAmount, 500) * 1e9;
+    const txnhash = await connection.requestAirdrop(publicKeyObject, lamports);
     setTxnHash(txnhash);
     // setIsAirdropped(true);
   };
-  
   console.log(`txhash: ${txnHash}`);
 
   return (
@@ -51,11 +52,13 @@ function App() {
             }
           </div>
           <div className='w-full mt-3 flex flex-col md:flex-row md:justify-center md:items-baseline'>
-            {/* <div className='m-1'> */}
-            {/* <span className='text-xl font-bold'>Airdrop</span> */}
-            {/* <input type="number" min='0' value="1" className='rounded mx-1 w-16 text-center text-gray-900 font-extrabold' /> */}
-            {/* <span className='text-xl font-bold'>SOL to</span> */}
-            {/* </div> */}
+            <div className='m-1'>
+              <span className='text-xl font-bold'>Airdrop</span>
+              <input type="number" min='0'
+                value={solAmount} onChange={(e) => setSolAmount(e.target.value)}
+                className='rounded mx-2 w-16 text-center text-gray-900 font-extrabold' />
+              <span className='text-xl font-bold'>SOL to</span>
+            </div>
             <div className='m-1'>
               <button type="submit"
                 className='bg-blue-600 text-white active:bg-blue-800 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150'>Airdrop</button>
